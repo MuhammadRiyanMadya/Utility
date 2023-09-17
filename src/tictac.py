@@ -4,38 +4,66 @@ Created on Sat Sep 16 18:52:34 2023
 
 @author: MMR
 """
+from random import randrange
 
-def display_board(df):
+def display_board(board):
     # df is a list showing the box status
     # df depends on user and computer input to the list
+    
     print('+'+'-'*7+'+'+'-'*7+'+'+'-'*7+'+')
     print(('|'+' '*7)*3 +'|')
-    print('|'+' '*3 + f'{df[0]}' + ' '*3 +'|'+' '*3 + f'{df[1]}' + ' '*3+'|'+' '*3 + f'{df[2]}' + ' '*3 +'|')
-    print(('|'+' '*7)*3 +'|')
-    print('+'+'-'*7+'+'+'-'*7+'+'+'-'*7+'+')
-    print(('|'+' '*7)*3 +'|')
-    print('|'+' '*3 + f'{df[3]}' + ' '*3 +'|'+' '*3 + f'{df[4]}' + ' '*3+'|'+' '*3 + f'{df[5]}' + ' '*3 +'|')
+    print('|'+' '*3 + f'{board[0][0]}' + ' '*3 +'|'+' '*3 + f'{board[0][1]}' + ' '*3+'|'+' '*3 + f'{board[0][2]}' + ' '*3 +'|')
     print(('|'+' '*7)*3 +'|')
     print('+'+'-'*7+'+'+'-'*7+'+'+'-'*7+'+')
     print(('|'+' '*7)*3 +'|')
-    print('|'+' '*3 + f'{df[6]}' + ' '*3 +'|'+' '*3 + f'{df[7]}' + ' '*3+'|'+' '*3 + f'{df[8]}' + ' '*3 +'|')
+    print('|'+' '*3 + f'{board[1][0]}' + ' '*3 +'|'+' '*3 + f'{board[1][1]}' + ' '*3+'|'+' '*3 + f'{board[1][2]}' + ' '*3 +'|')
     print(('|'+' '*7)*3 +'|')
-    print('+'+'-'*7+'+'+'-'*7+'+'+'-'*7+'+',end='')
-def move()
-    df = [1,2,3,4,5,6,7,8,9]
-    start_display = display_board(df)
+    print('+'+'-'*7+'+'+'-'*7+'+'+'-'*7+'+')
+    print(('|'+' '*7)*3 +'|')
+    print('|'+' '*3 + f'{board[2][0]}' + ' '*3 +'|'+' '*3 + f'{board[2][1]}' + ' '*3+'|'+' '*3 + f'{board[2][2]}' + ' '*3 +'|')
+    print(('|'+' '*7)*3 +'|')
+    print('+'+'-'*7+'+'+'-'*7+'+'+'-'*7+'+')
+    return board
+
+def user_move(board):
+    user_in = int(input("Input your move: "))
+    for i in range(len(board)):
+        for j in range(len(board)): 
+            if user_in == board[i][j]:
+                board[i][j] = 'O'
+    user_update_display = display_board(board)
+    return user_update_display
+
+def computer_move(board):
+    com_update_display = board
     while True:
-        # computer input
-        While True:
-            com_in = randrange(9)
-            for i in df:
-                if com_in == i:
-                    df[i-1] = com_in
-                    break
-        update_display = display_board(df)
-        # user input
-        user_in = int(input("Input your move: ")
-        for i in df:
-            if user_in == i:
-                df[i-1] = com_in
-        update_display = display_board(df)
+        com_in = randrange(9)
+        loop = False
+        for i in range(len(com_update_display)):
+            for j in range(len(com_update_display)):
+                if com_in == com_update_display[i][j]:
+                    com_update_display[i][j] = 'X'
+                    loop = True
+                    break                    
+        if loop == True:
+            break
+    com_update_display = display_board(com_update_display)
+    return com_update_display
+
+def start():
+    init = True
+    while True:
+        if init == True:
+            board = [['0' for i in range(0,3)] for j in range(0,3)]
+            counter = 1
+            for i in range(0,3):
+                for j in range(0,3):
+                    board[i][j] = counter
+                    counter += 1
+            board = display_board(board)
+            user = user_move(board)
+            init = False
+        else:
+            com = computer_move(user)
+            user = user_move(com)
+start()
