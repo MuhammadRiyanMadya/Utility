@@ -67,6 +67,22 @@ def winning_move(board):
           if len(com) == 3 or len(com_col) == 3:
              return print("Sorry You Are Loose !!")
 
+def winning_move(board):
+    user = []
+    user_col = []
+    com = []
+    com_col = []
+    for i,v in enumerate(board):
+       if 'O' in v:        
+          user.append(i)
+          user_col.append(v.index('O'))
+          if len(user) == 3 or len(user_col) == 3:
+             return print("You Win The Game !!")
+       if 'X' in v:        
+          com.append(i)
+          com_col.append(v.index('X'))
+          if len(com) == 3 or len(com_col) == 3:
+             return print("Sorry You Are Loose !!")
 def start():
     init = True
     while True:
@@ -84,4 +100,3 @@ def start():
             com = computer_move(user)
             user = user_move(com)
             result = winning_move(user)
-            if 
