@@ -66,7 +66,6 @@ def winning_move(board):
           com_col.append(v.index('X'))
           if len(com) == 3 or len(com_col) == 3:
              return print("Sorry You Are Loose !!")
-
 def winning_move(board):
     user = []
     user_col = []
@@ -76,8 +75,11 @@ def winning_move(board):
        if 'O' in v:        
           user.append(i)
           user_col.append(v.index('O'))
-          if len(user) == 3 or len(user_col) == 3:
-             return print("You Win The Game !!")
+          if len(user) == 3 :
+              if user[0] == user[1] == user[2]:
+                  print("You Win !!!")
+              elif user[0] + 1 == user[1] and user[1] + 1 == user[2]:
+                  print("You Win !!!")
        if 'X' in v:        
           com.append(i)
           com_col.append(v.index('X'))
