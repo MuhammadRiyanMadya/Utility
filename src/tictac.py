@@ -51,40 +51,69 @@ def computer_move(board):
     return com_update_display
     
 def winning_move(board):
+    global user_win, com_win
     user = []
-    user_col = []
+    user_col= []
     com = []
     com_col = []
-    for i,v in enumerate(board):
-       if 'O' in v:        
-          user.append(i)
-          user_col.append(v.index('O'))
-          if len(user) == 3 or len(user_col) == 3:
-             return print("You Win The Game !!")
-       if 'X' in v:        
-          com.append(i)
-          com_col.append(v.index('X'))
-          if len(com) == 3 or len(com_col) == 3:
-             return print("Sorry You Are Loose !!")
-def winning_move(board):
-    user = []
-    user_col = []
-    com = []
-    com_col = []
-    for i,v in enumerate(board):
-       if 'O' in v:        
-          user.append(i)
-          user_col.append(v.index('O'))
-          if len(user) == 3 :
-              if user[0] == user[1] == user[2]:
-                  print("You Win !!!")
-              elif user[0] + 1 == user[1] and user[1] + 1 == user[2]:
-                  print("You Win !!!")
-       if 'X' in v:        
-          com.append(i)
-          com_col.append(v.index('X'))
-          if len(com) == 3 or len(com_col) == 3:
-             return print("Sorry You Are Loose !!")
+    user_win = False
+    com_win = False
+    counter = 0
+    counter_com = 0
+    
+
+    for i, v in enumerate(board):
+        if 'O' in v:
+            user.append(i)
+            user_col.append(v.index('O'))
+            # debugging
+            # print('user: ', user)
+            # print('user_col: ', user_col)
+        if 'X' in v:        
+            com.append(i)
+            com_col.append(v.index('X'))
+            # debugging
+            # print('com: ', com)
+            # print('com_col: ', com_col)
+    if len(user) == 3:
+       for i in range(len(user)):
+           if user[i] == user[0] or user_col[i] == user_col[0]:
+               counter += 1
+               if counter == 3:
+                   user_win = True
+                   return user_win
+           elif i == user[i] and i == user_col[i]:
+               counter += 1
+               if counter == 3:
+                   user_win = True
+                   return user_win
+           elif (user[i] + user_col[i] == 2):
+               counter += 1
+               if counter == 3:
+                   user_win = True
+                   return user_win
+           else:
+               user_win = False
+       for i in range(len(com)):
+           if com[i] == com[0] or com_col[i] == com_col[0]:
+               counter_com += 1
+               if counter_com == 3:
+                   com_win = True
+                   return com_win
+           elif i == com[i] and i == com_col[i]:
+               counter_com += 1
+               if counter_com == 3:
+                   com_win = True
+                   return com_win
+           elif (com[i] + com_col[i] == 2):
+               counter_com += 1
+               if counter_com == 3:
+                   com_win = True
+                   return com_win
+           else:
+               com_win = False
+    return
+          
 def start():
     init = True
     while True:
@@ -101,4 +130,14 @@ def start():
         else:
             com = computer_move(user)
             user = user_move(com)
-            result = winning_move(user)
+            winning_move(user)
+            # Why I cannot upack boolean value from a function
+            if user_win and com_win == True:
+                return print("Draw !!!")
+            elif user_win == True and com_win == False:
+                return print("You Win !!!")
+            elif user_win == False and com_win == True:
+                return print("You lose !!!")
+            else:
+                pass
+start()
