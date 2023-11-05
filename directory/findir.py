@@ -2,14 +2,19 @@ import os
 
 def find(path, dire):
     for folder in os.listdir(path):
-        if folder == dire:
-            os.chdir(dire)
-            print('+' + os.getcwd(dire))
-        elif '.' not in folder:
-            find(folder,dire)
-        else:
-            print("That's All")
-            break
+        try:
+            if folder == dire:
+                os.chdir(path + '\\' + dire)
+                print('+-> ' + os.getcwd())
+            elif '.' not in folder:
+                find(path + '\\' + folder,dire)
+            elif '.' in folder:
+                continue
+            else:
+                break
+        except:
+            print('+-> ' + folder + ' does not allow to be searched')
+            continue
     return
 
-print(os.listdir(r"C:\Users\ssv\OneDrive - Polytama Propindo\Documents\Flakes"))
+find(r'C:\Users\mrm\Documents', 'python')
