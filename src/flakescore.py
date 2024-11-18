@@ -29,6 +29,7 @@ class Moplene():
     def open(self, path):
         try:
             df = pd.read_excel(path)
+##            print(df.iloc[:,4:6])
             # code for location is col 7
             # code for classification is col 8
             lastRow = len(df)
@@ -49,10 +50,25 @@ class Moplene():
                     losstime = df.iloc[-i,11]
                     
                     self.TRdict = {'sender': sender, 'title': title, 'time': time, 'loc': loc, 'cr': cr, 'act': act, 'lt': losstime}
+
+                    if loc == 'Bulk':
+                        path = r"D:\Polytama Propindo\Production - Documents\General\Trouble Report dan Laporan Kejadian\Trial-Bulk"
+                    elif loc == 'Utility':
+                        path = r"D:\Polytama Propindo\Production - Documents\General\Trouble Report dan Laporan Kejadian\Trial-Utility"
+                    elif loc == 'Pelletizing 1':
+                        path = r"D:\Polytama Propindo\Production - Documents\General\Trouble Report dan Laporan Kejadian\Trial-Pelletizing 1"
+                    elif loc == 'Pelletizing 2':
+                        path = r"D:\Polytama Propindo\Production - Documents\General\Trouble Report dan Laporan Kejadian\Trial-Pelletizing 2"
+                    elif loc == 'Bagging 1':
+                        path = r"D:\Polytama Propindo\Production - Documents\General\Trouble Report dan Laporan Kejadian\Trial-Bagging 1"
+                    elif loc == 'Bagging 2':
+                        path = r"D:\Polytama Propindo\Production - Documents\General\Trouble Report dan Laporan Kejadian\Trial-Bagging 2"
+                        
     
-                    self.write(r'C:\Users\mrm\Documents\Production Engineering\Reporting system', 'FRM.PRO.01.45.xlsx', self.TRdict)
+                    self.write(path, 'FRM.PRO.01.45.xlsx', self.TRdict)
 
                     email_subject = 'Trouble Report Notification: ' + self.TRdict['title']
+                    print(email_subject)
                     self.email(email_subject, self.current_report)
                     
             config.set('Excel Counter', 'lastRow', str(lastRow))
@@ -64,17 +80,19 @@ class Moplene():
         
         return self.TRdict
     
-    def email(self, subject, reportPath, attachPath = None):
-        app = win32.Dispatch('Outlook.Application')
-        appNS = app.GetNameSpace('MAPI')
-        mailItem = app.CreateItem(0)
+    def email(self, subject, reportPath , attachPath = None):
+        app = win32.gencache.EnsureDispatch("Outlook.Application").GetNamespace("MAPI")
+        app = win32.Dispatch("Outlook.Application")
+##        app = win32.Dispatch('Outlook.Application')
+##        appNS = app.GetNameSpace('MAPI')
+        mailItem = app.CreateItem(0x0)
+        mailItem.To = 'mcr@polytama.co.id'
         mailItem.Subject = subject
         mailItem.Attachments.Add(reportPath)
-        attachment = mailItem.Attachments.Add("C:\\Users\\mrm\\Documents\\Eng\\Reporting system\\__buffer\\" + self.imgTitle)
+        attachment = mailItem.Attachments.Add(r'D:\Polytama Propindo\Production - Documents\General\Trouble Report dan Laporan Kejadian\__program\__buffer' + '\\' + self.imgTitle)
         attachment.PropertyAccessor.SetProperty("http://schemas.microsoft.com/mapi/proptag/0x3712001F", "imgTitle")
         mailItem.BodyFormat = 2
-        mailItem.To = 'riyan.madya@polytama.co.id'
-##        mailItem.CC = 'faisal.alrasyid@polytama.co.id' #'TroubleReportReceiver@polytama.co.id'
+        mailItem.CC = 'riyan.madya@polytama.co.id' #'TroubleReportReceiver@polytama.co.id'
         mailItem.HTMLBody =\
                 f"""
                   <p class=MsoNormal style='line-height:36.0pt'><b><span style='font-size:
@@ -114,7 +132,7 @@ class Moplene():
                   <p class=MsoNormal align=center style='text-align:center'><span
                   style='mso-fareast-font-family:"Times New Roman";color:black;mso-color-alt:
                   windowtext'><a
-                  href="https://forms.office.com/Pages/DesignPage.aspx#FormId=-Xeeu-y6JUq8QCodK-FiEvnAlwg999pCl7uHqF6VpoNUNFlBMlJZQ1pXRDlPRjVNNUNHVVowOEhPUS4u&amp;Analysis=true&amp;origin=EmailNotification"
+                  href="https://polytama-my.sharepoint.com/:x:/g/personal/s_supervisor_polytama_co_id/EebK6hG5a6tKnTIQMf6dELYBWO_7NpMJMWfyGUrMjLKvOA?e=04YUob"
                   target="_blank" style='display:inline-block;border-radius:4px'><b><span
                   style='font-size:10.5pt;font-family:"Segoe UI",sans-serif;color:white;
                   background:#03787C;text-decoration:none;text-underline:none'>View&nbsp;Register
@@ -206,7 +224,7 @@ class Moplene():
 ##            </html>
 ##        """
     
-
+##        mailItem.Display()
         mailItem.Save()
         mailItem.Send()
         
@@ -223,11 +241,11 @@ class Moplene():
         strf_time = str(mydict['time'].strftime('%Y-%m-%d'))
         rt_container = ['Trouble Report ', strf_time,' ', subject, '.xlsx']
         report_title = ''.join(rt_container)
-        self.current_report = fileloc + '\\' + report_title
-        shutil.copy(fileloc + '\\' + filename, fileloc + '\\' + report_title)
+        self.current_report = path + '\\' + report_title
+        shutil.copy(fileloc + '\\' + filename, path + '\\' + report_title)
 
         wb_app = xw.App(visible = False)
-        wb = xw.Book(fileloc + '\\' + report_title)
+        wb = xw.Book(path + '\\' + report_title)
         sheet = wb.sheets[0]
         sheet.range(11,3).value = sender
         sheet.range(15,3).value = subject
@@ -249,7 +267,7 @@ class Moplene():
         for i in range(len(df)):
             locs = df.iloc[i,7]
             cluster = df.iloc[i,8]
-            if cluster == 'Proses':
+            if cluster == 'Process':
                 p.append(locs)
             elif cluster == 'Quality':
                 q.append(locs)
@@ -265,7 +283,7 @@ class Moplene():
             a6 = l.count('Bagging 2')
                 
             if i == 0:
-                self.stats['Proses'] = [a1, a2, a3, a4, a5, a6]
+                self.stats['Process'] = [a1, a2, a3, a4, a5, a6]
             elif i == 1:
                 self.stats['Quality'] = [a1, a2, a3, a4, a5, a6]
             else:
@@ -277,8 +295,35 @@ class Moplene():
 
 # Test-1
 
+    
 myExcel = Moplene()
-myd = myExcel.open(r'C:\Users\mrm\OneDrive - Polytama Propindo\Trouble Report Production Dept.xlsx')
+myd = myExcel.open(r'D:\OneDrive - Polytama Propindo\Trouble Report Register\Trouble Report Production Department.xlsx')
 ##write(r'C:\Users\mrm\Documents\Production Engineering\Reporting system\FRM.PRO.01.45.XLS', 'FRM.PRO.01.45.xlsx', myd)
+##myExcel.email('GOOD')
 
 ##myExcel.email('Trouble')
+
+##import psutil
+##import subprocess
+##def open_outlook():
+##    try:
+##        subprocess.call([r'C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE'])
+##        os.system(r'C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE');
+##    except Exception as e:
+##        raise e
+##        print("Outlook didn't open successfully")
+##
+### Checking if outlook is already opened. If not, open Outlook.exe and send email
+##for item in psutil.pids():
+##    p = psutil.Process(item)
+##    if p.name() == "OUTLOOK.EXE":
+##        flag = 1
+##        break
+##    else:
+##        flag = 0
+##
+##if (flag == 1):
+##    myExcel.email('OKOK')
+##else:
+##    open_outlook()
+##    myExcel.email('OKOK')
