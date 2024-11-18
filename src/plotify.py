@@ -1,4 +1,4 @@
-# Create dummy data indexed by month and with multi-columns [product, revenue]
+#!/usr/bin/env python
 import matplotlib.pyplot as plt
 import numpy as np
 from datetime import datetime
@@ -8,14 +8,15 @@ def plotify(stats:dict, imgTitle):
     
     locs = ('Bulk', 'Utility', 'Pelletizing 1', 'Pelletizing 2', 'BM 1', 'BM 2')
     cluster = {
+        # test
 ##        'Process': np.array([7, 3, 6,2,3,4]),
 ##        'Quality': np.array([3, 4, 8,1,3, 5]),
 ##        'Safety': np.array([7, 3, 5,1,3, 5]),
-        'Proses': np.array(stats['Proses']),
+        'Process': np.array(stats['Process']),
         'Quality': np.array(stats['Quality']),
         'Safety': np.array(stats['Safety']),
     }
-    width = 0.4  # the width of the bars: can also be len(x) sequence
+    width = 0.4
 
     color = ["#0288D1", "#CE93D8", "#EF9A9A"]
     labels = ['Safety', 'Quality', 'Process']
@@ -34,10 +35,10 @@ def plotify(stats:dict, imgTitle):
     ##ax.set_title('Troubles')
     ax.legend()
 ##    plt.show()
-    fig.savefig(r'C:\Users\mrm\Documents\Eng\Reporting system\__buffer' + '\\' + imgTitle)
+    fig.savefig(r'D:\Polytama Propindo\Production - Documents\General\Trouble Report dan Laporan Kejadian\__program\__buffer' + '\\' + imgTitle)
 
     return
 
 # test
 
-##plotify({'Process':[7,3,6,2,3,4], 'Quality':[7,3,6,2,3,4], 'Safety':[7,3,6,2,3,4]})
+##plotify({'Process':[7,3,6,2,3,4], 'Quality':[7,3,6,2,3,4], 'Safety':[7,3,6,2,3,4]}, '12-12-13.png')
