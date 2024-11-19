@@ -36,9 +36,9 @@ class Moplene():
             lastRowConfig = int(config.get('Excel Counter', 'lastRow'))
             if lastRow > lastRowConfig:
                 newReport = abs(lastRow - lastRowConfig)
-                newStats = self.counter(df)
+                newStats, latestVal = self.counter(df)
                 self.imgTitle = datetime.now().strftime('%d-%m-%y %H-%M') + '.png'
-                plotify(newStats, self.imgTitle) 
+                plotify(newStats, self.imgTitle, latestVal) 
                 
                 for i in range(newReport,0,-1):
                     sender = df.iloc[-i,4]
@@ -50,7 +50,7 @@ class Moplene():
                     losstime = df.iloc[-i,11]
                     
                     self.TRdict = {'sender': sender, 'title': title, 'time': time, 'loc': loc, 'cr': cr, 'act': act, 'lt': losstime}
-
+                    
                     if loc == 'Bulk':
                         path = r"D:\Polytama Propindo\Production - Documents\General\Trouble Report dan Laporan Kejadian\Trial-Bulk"
                     elif loc == 'Utility':
@@ -64,7 +64,7 @@ class Moplene():
                     elif loc == 'Bagging 2':
                         path = r"D:\Polytama Propindo\Production - Documents\General\Trouble Report dan Laporan Kejadian\Trial-Bagging 2"
                         
-    
+
                     self.write(path, 'FRM.PRO.01.45.xlsx', self.TRdict)
 
                     email_subject = 'Trouble Report Notification: ' + self.TRdict['title']
@@ -89,10 +89,10 @@ class Moplene():
         mailItem.To = 'mcr@polytama.co.id'
         mailItem.Subject = subject
         mailItem.Attachments.Add(reportPath)
-        attachment = mailItem.Attachments.Add(r'D:\Polytama Propindo\Production - Documents\General\Trouble Report dan Laporan Kejadian\__program\__buffer' + '\\' + self.imgTitle)
+        attachment = mailItem.Attachments.Add(r'C:\Users\ssv\AppData\Local\Programs\Python\Python311\InjectionX\__program\__buffer' + '\\' + self.imgTitle)
         attachment.PropertyAccessor.SetProperty("http://schemas.microsoft.com/mapi/proptag/0x3712001F", "imgTitle")
         mailItem.BodyFormat = 2
-        mailItem.CC = 'riyan.madya@polytama.co.id' #'TroubleReportReceiver@polytama.co.id'
+        mailItem.CC = 'riyan.madya@polytama.co.id; s.supervisor@polytama.co.id' ' #'TroubleReportReceiver@polytama.co.id'
         mailItem.HTMLBody =\
                 f"""
                   <p class=MsoNormal style='line-height:36.0pt'><b><span style='font-size:
@@ -104,7 +104,7 @@ class Moplene():
                   <div style='margin-top:7.5pt'>
                   <p class=MsoNormal style='line-height:15.75pt'><span style='font-size:
                   12.0pt;font-family:"Segoe UI",sans-serif;mso-fareast-font-family:"Times New Roman";
-                  color:#505050;letter-spacing:.15pt'><!-- // FormTitle --> Dear Mr. Wifandy and Production Team!,<o:p></o:p></span ></p>
+                  color:#505050;letter-spacing:.15pt'><!-- // FormTitle --> Dear Mr. Wifandy and Production Team,<o:p></o:p></span ></p>
             <!-- // EmailSalutation -->
                   <p class=MsoNormal style='line-height:15.75pt'><span style='font-size:
                   12.0pt;font-family:"Segoe UI",sans-serif;mso-fareast-font-family:"Times New Roman";
@@ -289,8 +289,9 @@ class Moplene():
             else:
                 self.stats['Safety'] = [a1, a2, a3, a4, a5, a6]
             i += 1
-
-        return self.stats
+            
+        latestVal = str(locs) + str(cluster)
+        return self.stats, latestVal
      
 
 # Test-1
