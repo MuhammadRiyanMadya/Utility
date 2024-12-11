@@ -1,0 +1,1 @@
+start "" "C:\Users\ssv\AppData\Local\Programs\Python\Python311\pythonw.exe" "C:\Users\ssv\AppData\Local\Programs\Python\Python311\InjectionX\__program\flakescore.pyw"
